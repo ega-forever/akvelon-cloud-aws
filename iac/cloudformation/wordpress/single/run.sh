@@ -1,0 +1,1 @@
+aws cloudformation create-stack --stack-name mystack-single --template-body file://wordpress.template --cli-input-json file://input.json
