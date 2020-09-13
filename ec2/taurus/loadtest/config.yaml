@@ -1,0 +1,12 @@
+execution:
+  - concurrency: 100
+    hold-for: 5m
+    ramp-up: 2m
+    scenario: sample
+
+scenarios:
+  sample:
+    headers:
+      Connection: close
+    requests:
+      - https://google.com
