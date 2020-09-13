@@ -146,7 +146,6 @@ Parameters:
     Description: VpcId of your existing Virtual Private Cloud (VPC)
     ConstraintDescription: must be the VPC Id of an existing Virtual Private Cloud.
 
-
 Mappings:
   AWSInstanceType2Arch:
     t1.micro:
