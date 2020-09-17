@@ -9,4 +9,4 @@ scenarios:
     headers:
       Connection: close
     requests:
-      - https://google.com
+      - http://akvelon-app-lb-743841457.eu-west-1.elb.amazonaws.com:8080

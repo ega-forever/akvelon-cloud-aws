@@ -1,5 +1,5 @@
 phantom:
-  address: web-app-729139025.eu-west-1.elb.amazonaws.com:8080 # [Target's address]:[target's port]
+  address: akvelon-app-lb-743841457.eu-west-1.elb.amazonaws.com:8080 # [Target's address]:[target's port]
   uris:
     - /
   load_profile:
