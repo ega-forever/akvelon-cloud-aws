@@ -1,0 +1,41 @@
+{
+   "name": "songs.services.backend",
+   "version": "1.0.0",
+   "description": "music store service",
+   "main": "index.ts",
+   "scripts": {
+      "start": "ts-node --cache-directory .temp ./src/index.ts",
+      "test": "mocha --timeout 360000 -r ts-node/register tests/integration/api/*.test.ts",
+      "lint": "tslint --fix src/**/*.ts"
+   },
+   "author": "Egor Zuev",
+   "license": "ISC",
+   "bugs": {},
+   "dependencies": {
+      "apollo-server-express": "2.9.1",
+      "body-parser": "1.18.3",
+      "bunyan": "1.8.12",
+      "class-validator": "^0.12.2",
+      "dotenv": "6.0.0",
+      "express": "4.16.3",
+      "express-cors": "0.0.3",
+      "graphql": "^14.5.8",
+      "lodash": "4.17.15",
+      "pg": "8.2.1",
+      "reflect-metadata": "^0.1.13",
+      "type-graphql": "^0.17.5",
+      "typedi": "0.8.0",
+      "typeorm": "0.2.25",
+      "typeorm-typedi-extensions": "^0.2.3"
+   },
+   "devDependencies": {
+      "@types/bunyan": "1.8.6",
+      "@types/express": "4.17.1",
+      "@types/lodash": "4.14.138",
+      "@types/node": "^11.15.0",
+      "ts-node": "7.0.1",
+      "tslint": "5.19.0",
+      "tslint-config-airbnb": "5.11.1",
+      "typescript": "3.5.3"
+   }
+}
