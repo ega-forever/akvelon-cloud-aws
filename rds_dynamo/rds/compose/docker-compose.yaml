@@ -1,0 +1,16 @@
+version: "3"
+
+services:
+
+  db:
+    image: postgres:12.0
+    environment:
+      POSTGRES_USER: music
+      POSTGRES_PASSWORD: 123
+    ports:
+      - 5432:5432
+    networks:
+      - main
+
+networks:
+  main:
