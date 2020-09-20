@@ -4,12 +4,16 @@ import { Inject } from 'typedi';
 import { DI } from '../../../constants/DI';
 import * as AWS from 'aws-sdk';
 import ArtistModel from '../../../models/dynamo/artist/ArtistSchema';
+import * as bunyan from 'bunyan';
 
 @Resolver()
 export default class ArtistMutation {
 
   @Inject(DI.dynamodb)
   private readonly dynamodb: AWS.DynamoDB;
+
+  @Inject(DI.logger)
+  private readonly logger: bunyan;
 
   @Mutation(returnType => Artist)
   public async artistAdd(
@@ -32,7 +36,8 @@ export default class ArtistMutation {
       ReturnConsumedCapacity: 'TOTAL'
     };
 
-    await this.dynamodb.putItem(params).promise();
+    const { ConsumedCapacity } = await this.dynamodb.putItem(params).promise();
+    this.logger.info(`consumed ${ ConsumedCapacity.CapacityUnits } units for adding artist`);
     const artist: Artist = new Artist();
     artist.name = params.Item.name.S;
     artist.createdAt = parseInt(params.Item.createdAt.S, 10);
@@ -43,17 +48,18 @@ export default class ArtistMutation {
   public async artistRemove(
     @Arg('id') id: string
   ): Promise<boolean> {
-    await this.dynamodb.deleteItem({
+    const { ConsumedCapacity } = await this.dynamodb.deleteItem({
       TableName: ArtistModel.TableName,
       Key: {
         symbol: {
           S: id.substr(0, 1).toUpperCase()
         },
         createdAt: {
-          S: id.split(':')[1]
+          S: id.split('#')[1]
         }
       }
     }).promise();
+    this.logger.info(`consumed ${ ConsumedCapacity.CapacityUnits } units for removing artist`);
     return true;
   }
 

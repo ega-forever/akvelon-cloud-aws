@@ -4,6 +4,7 @@ import { Inject } from 'typedi';
 import { DI } from '../../../constants/DI';
 import * as AWS from 'aws-sdk';
 import SongModel from '../../../models/dynamo/song/SongSchema';
+import * as bunyan from 'bunyan';
 
 @Resolver()
 export default class SongResolver {
@@ -11,16 +12,15 @@ export default class SongResolver {
   @Inject(DI.dynamodb)
   private readonly dynamodb: AWS.DynamoDB;
 
+  @Inject(DI.logger)
+  private readonly logger: bunyan;
+
   @Query(returns => [Song])
   public async songsListByArtist(
     @Arg('artistId', type => String, { nullable: true }) artistId: string,
-    @Arg('upperDate', type => Number, { nullable: true }) date: number,
+    @Arg('lastId', type => String, { nullable: true }) lastId: string,
     @Arg('limit', type => Number, { nullable: true, defaultValue: 10 }) limit: number
   ): Promise<Song[]> {
-
-    if (!date) {
-      date = Date.now();
-    }
 
     const params = {
       TableName: SongModel.TableName,
@@ -28,15 +28,20 @@ export default class SongResolver {
       Limit: limit,
       ConsistentRead: false,
       ExpressionAttributeValues: {
-        ':artistId': { S: artistId },
-        ':releaseDate': { S: date.toString() }
+        ':artistId': { S: artistId }
       },
-      KeyConditionExpression: 'artistId = :artistId AND releaseDate < :releaseDate',
-      IndexName: SongModel.GlobalSecondaryIndexes[0].IndexName,
-      ScanIndexForward: false
+      KeyConditionExpression: 'artistId = :artistId',
+      ScanIndexForward: false,
+      ReturnConsumedCapacity: 'TOTAL'
     };
 
-    const { Items } = await this.dynamodb.query(params).promise();
+    if (lastId) {
+      params.ExpressionAttributeValues[':lastId'] = { S: lastId };
+      params.KeyConditionExpression = 'artistId = :artistId AND id < :lastId'
+    }
+
+    const { Items, ScannedCount, ConsumedCapacity } = await this.dynamodb.query(params).promise();
+    this.logger.info(`consumed ${ ConsumedCapacity.CapacityUnits } units for reading songs list with scanned count ${ ScannedCount }`);
     const result = [];
 
     for (const item of Items) {
@@ -44,7 +49,8 @@ export default class SongResolver {
         name: item.name.S,
         genreType: parseInt(item.genreType.N, 10),
         artistId: item.artistId.S,
-        releaseDate: item.releaseDate.S
+        releaseDate: item.releaseDate.S,
+        id: item.id.S
       })
     }
 

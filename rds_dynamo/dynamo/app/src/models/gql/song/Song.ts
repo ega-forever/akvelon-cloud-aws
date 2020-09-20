@@ -10,6 +10,9 @@ export class Song {
   public genreType: number;
 
   @Field()
+  public id: string;
+
+  @Field()
   public releaseDate: number;
 
   @Field()

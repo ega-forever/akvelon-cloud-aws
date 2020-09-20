@@ -14,6 +14,7 @@
    "dependencies": {
       "apollo-server-express": "2.9.1",
       "aws-sdk": "^2.756.0",
+      "axios": "^0.20.0",
       "body-parser": "1.18.3",
       "bunyan": "1.8.12",
       "class-validator": "^0.12.2",

@@ -4,14 +4,17 @@ import { Inject } from 'typedi';
 import { DI } from '../../../constants/DI';
 import * as AWS from 'aws-sdk';
 import SongModel from '../../../models/dynamo/song/SongSchema';
-import { Artist } from '../../../models/gql/artist/Artist';
 import { GenreType } from '../../../../../../rds/app/src/constants/GenreType';
+import * as bunyan from 'bunyan';
 
 @Resolver()
 export default class SongMutation {
 
   @Inject(DI.dynamodb)
   private readonly dynamodb: AWS.DynamoDB;
+
+  @Inject(DI.logger)
+  private readonly logger: bunyan;
 
   @Mutation(returnType => Song)
   public async songAdd(
@@ -35,25 +38,42 @@ export default class SongMutation {
         },
         artistId: {
           S: artistId
+        },
+        id: {
+          S: `${genreType}#${releaseDate}`
         }
       },
       ReturnConsumedCapacity: 'TOTAL'
     };
 
-    await this.dynamodb.putItem(params).promise();
+    const {ConsumedCapacity } = await this.dynamodb.putItem(params).promise();
+    this.logger.info(`consumed ${ ConsumedCapacity.CapacityUnits } units for adding song`);
     const song: Song = new Song();
     song.name = params.Item.name.S;
     song.genreType = parseInt(params.Item.genreType.N, 10);
     song.releaseDate = parseInt(params.Item.releaseDate.S, 10);
     song.artistId = params.Item.artistId.S;
+    song.id = params.Item.id.S;
     return song;
   }
 
   @Mutation(returnType => Boolean)
   public async songRemove(
-    @Arg('id') id: number
+    @Arg('artistId') artistId: string,
+    @Arg('id') id: string
   ): Promise<boolean> {
-    //await this.songRepository.delete({ id });
+    const { ConsumedCapacity } = await this.dynamodb.deleteItem({
+      TableName: SongModel.TableName,
+      Key: {
+        id: {
+          S: id
+        },
+        artistId: {
+          S: artistId
+        }
+      }
+    }).promise();
+    this.logger.info(`consumed ${ ConsumedCapacity.CapacityUnits } units for removing song`);
     return true;
   }
 

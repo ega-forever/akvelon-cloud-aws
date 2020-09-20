@@ -4,12 +4,16 @@ import ArtistModel from '../../../models/dynamo/artist/ArtistSchema';
 import { Inject } from 'typedi';
 import { DI } from '../../../constants/DI';
 import * as AWS from 'aws-sdk';
+import * as bunyan from 'bunyan';
 
 @Resolver()
 export default class ArtistResolver {
 
   @Inject(DI.dynamodb)
   private readonly dynamodb: AWS.DynamoDB;
+
+  @Inject(DI.logger)
+  private readonly logger: bunyan;
 
   @Query(returns => [Artist])
   public async artistList(
@@ -32,10 +36,12 @@ export default class ArtistResolver {
         ':date': { S: date.toString() }
       },
       KeyConditionExpression: 'symbol = :symbol AND createdAt < :date',
-      ScanIndexForward: false
+      ScanIndexForward: false,
+      ReturnConsumedCapacity: 'TOTAL'
     };
 
-    const { Items } = await this.dynamodb.query(params).promise();
+    const { Items, ConsumedCapacity, ScannedCount } = await this.dynamodb.query(params).promise();
+    this.logger.info(`consumed ${ ConsumedCapacity.CapacityUnits } units for reading songs list with scanned count ${ ScannedCount }`);
     const result = [];
 
     for (const item of Items) {

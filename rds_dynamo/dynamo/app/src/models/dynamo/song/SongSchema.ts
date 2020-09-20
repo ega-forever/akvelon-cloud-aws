@@ -1,11 +1,7 @@
 export default {
   AttributeDefinitions: [
     {
-      AttributeName: 'name',
-      AttributeType: 'S'
-    },
-    {
-      AttributeName: 'releaseDate',
+      AttributeName: 'id', // where id is genreType#releaseDate
       AttributeType: 'S'
     },
     {
@@ -15,34 +11,12 @@ export default {
   ],
   KeySchema: [
     {
-      AttributeName: 'name',
+      AttributeName: 'artistId',
       KeyType: 'HASH'
     },
     {
-      AttributeName: 'releaseDate',
+      AttributeName: 'id',
       KeyType: 'RANGE'
-    }
-  ],
-  GlobalSecondaryIndexes: [
-    {
-      IndexName: 'index_artistId_releaseDate',
-      KeySchema: [
-        {
-          AttributeName: 'artistId',
-          KeyType: 'HASH'
-        },
-        {
-          AttributeName: 'releaseDate',
-          KeyType: 'RANGE'
-        }
-      ],
-      Projection: {
-        ProjectionType: 'ALL'
-      },
-      ProvisionedThroughput: {
-        ReadCapacityUnits: 5,
-        WriteCapacityUnits: 5
-      }
     }
   ],
   ProvisionedThroughput: {

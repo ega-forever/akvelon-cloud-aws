@@ -5,7 +5,7 @@ export class Artist {
 
   @Field(()=> String)
   public id() {
-    return `${ this.name }:${ this.createdAt }`
+    return `${ this.name }#${ this.createdAt }`
   }
 
   @Field()
