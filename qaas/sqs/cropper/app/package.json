@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "ts-node --cache-directory .temp ./src/index.ts"
+    "start": "ts-node --cache-directory .temp ./src/index.ts",
+    "build": "tsc"
   },
   "author": "",
   "license": "ISC",

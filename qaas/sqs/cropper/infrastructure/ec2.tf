@@ -27,8 +27,13 @@ resource "aws_instance" "app" {
   key_name = var.ec2_keypair_name
   depends_on = [aws_security_group.app_sg] // todo add s3
   vpc_security_group_ids = [aws_security_group.app_sg.id]
+  iam_instance_profile = aws_iam_instance_profile.app_sqs_s3_role_profile.name
   user_data = <<-EOT
               #!/bin/bash
+  git clone https://github.com/ega-forever/akvelon-cloud-aws.git
+  curl -sL https://deb.nodesource.com/setup_14.x | sudo -E bash -
+  sudo apt-get install -y nodejs
+
   EOT
 
 }
