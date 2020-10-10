@@ -1,0 +1,28 @@
+{
+  "name": "sql",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "run_1": "set INDEX=0 && ts-node src/cluster.ts",
+    "run_2": "set INDEX=1 && ts-node src/cluster.ts",
+    "run_3": "set INDEX=2 && ts-node src/cluster.ts"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "ts-node": "^8.6.2",
+    "tslint": "^5.20.1",
+    "typescript": "^3.7.4"
+  },
+  "dependencies": {
+    "@types/node": "^13.1.7",
+    "bluebird": "^3.7.2",
+    "body-parser": "^1.19.0",
+    "bunyan": "^1.8.12",
+    "express": "^4.17.1",
+    "node-zookeeper-client": "^1.1.0",
+    "request": "^2.88.0",
+    "request-promise": "^4.2.5"
+  }
+}

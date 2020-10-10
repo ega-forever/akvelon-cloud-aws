@@ -1,0 +1,16 @@
+version: "3"
+
+services:
+
+  zookeeper:
+    image: zookeeper
+    environment:
+      POSTGRES_USER: music
+      POSTGRES_PASSWORD: 123
+    ports:
+      - 2181:2181
+    networks:
+      - main
+
+networks:
+  main:

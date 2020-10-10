@@ -1,0 +1,17 @@
+{
+  "name": "proxy_app",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "aws-sdk": "^2.771.0",
+    "aws-xray-sdk": "^3.2.0",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1"
+  }
+}
