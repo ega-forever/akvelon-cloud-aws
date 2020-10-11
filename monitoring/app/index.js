@@ -14,6 +14,12 @@ app.get('/', (req, res) => {
 
 app.get('/log', async (req, res) => {
 
+  const description = await cloudWatchLogs.describeLogStreams({
+    logGroupName: config.logs.group,
+    logStreamNamePrefix: config.logs.stream
+  }).promise();
+
+
   const params = {
     logEvents: [
       {
@@ -22,7 +28,8 @@ app.get('/log', async (req, res) => {
       }
     ],
     logGroupName: config.logs.group,
-    logStreamName: config.logs.stream
+    logStreamName: config.logs.stream,
+    sequenceToken: description.logStreams[0].uploadSequenceToken
   };
 
   await cloudWatchLogs.putLogEvents(params).promise();

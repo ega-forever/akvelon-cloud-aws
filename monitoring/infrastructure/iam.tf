@@ -1,6 +1,6 @@
 data "aws_iam_policy_document" "app-cloudwatch-policy-inline" {
   statement {
-    actions = ["logs:PutLogEvents"]
+    actions = ["logs:PutLogEvents", "logs:DescribeLogStreams"]
     resources = [aws_cloudwatch_log_stream.app_log_stream.arn]
   }
   statement {

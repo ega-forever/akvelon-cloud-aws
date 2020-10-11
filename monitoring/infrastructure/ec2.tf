@@ -31,17 +31,29 @@ resource "aws_instance" "app" {
 
   user_data = <<-EOT
   #!/bin/bash
-  export LOGS_REGION=${data.aws_region.current.name}
-  export LOGS_API_VERSION=2014-03-28
-  export LOGS_GROUP=${aws_cloudwatch_log_group.app_lg.name}
-  export LOGS_STREAM=${aws_cloudwatch_log_stream.app_log_stream.name}
 
   curl -sL https://deb.nodesource.com/setup_14.x | sudo -E bash -
-  sudo apt-get install -y nodejs
-  sudo npm install -g pm2
+  apt-get install -y nodejs
+  npm install -g pm2
   curl https://s3.dualstack.eu-west-1.amazonaws.com/aws-xray-assets.eu-west-1/xray-daemon/aws-xray-daemon-3.x.deb -o xray.deb && dpkg -i ./xray.deb
   git clone https://github.com/ega-forever/akvelon-cloud-aws.git ~/app
-  cd ~/app/monitoring/app && npm install --unsafe-perm && npm run build && pm2 startup ubuntu && pm2 start build/index.js && pm2 save
+  cd ~/app/monitoring/app && \
+  echo 'module.exports = {
+  apps : [
+      {
+        name: "myapp",
+        script: "./index.js",
+        watch: false,
+        env: {
+            "LOGS_REGION": "${data.aws_region.current.name}",
+            "LOGS_API_VERSION": "2014-03-28",
+            "LOGS_GROUP": "${aws_cloudwatch_log_group.app_lg.name}",
+            "LOGS_STREAM": "${aws_cloudwatch_log_stream.app_log_stream.name}"
+        }
+      }
+  ]
+}' > ecosystem.config.js && \
+  npm install && sudo pm2 startup ubuntu && sudo pm2 start ecosystem.config.js && sudo pm2 save
 
   EOT
 
