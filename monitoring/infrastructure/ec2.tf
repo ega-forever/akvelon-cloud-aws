@@ -39,20 +39,20 @@ resource "aws_instance" "app" {
   git clone https://github.com/ega-forever/akvelon-cloud-aws.git ~/app
   cd ~/app/monitoring/app && \
   echo 'module.exports = {
-  apps : [
-      {
-        name: "myapp",
-        script: "./index.js",
-        watch: false,
-        env: {
-            "LOGS_REGION": "${data.aws_region.current.name}",
-            "LOGS_API_VERSION": "2014-03-28",
-            "LOGS_GROUP": "${aws_cloudwatch_log_group.app_lg.name}",
-            "LOGS_STREAM": "${aws_cloudwatch_log_stream.app_log_stream.name}"
+    apps : [
+        {
+          name: "myapp",
+          script: "./index.js",
+          watch: false,
+          env: {
+              "LOGS_REGION": "${data.aws_region.current.name}",
+              "LOGS_API_VERSION": "2014-03-28",
+              "LOGS_GROUP": "${aws_cloudwatch_log_group.app_lg.name}",
+              "LOGS_STREAM": "${aws_cloudwatch_log_stream.app_log_stream.name}"
+          }
         }
-      }
-  ]
-}' > ecosystem.config.js && \
+    ]
+  }' > ecosystem.config.js && \
   npm install && sudo pm2 startup ubuntu && sudo pm2 start ecosystem.config.js && sudo pm2 save
 
   EOT

@@ -1,7 +1,11 @@
 data "aws_iam_policy_document" "app-cloudwatch-policy-inline" {
   statement {
-    actions = ["logs:PutLogEvents", "logs:DescribeLogStreams"]
+    actions = ["logs:PutLogEvents"]
     resources = [aws_cloudwatch_log_stream.app_log_stream.arn]
+  }
+  statement {
+    actions = ["logs:DescribeLogStreams"]
+    resources = ["*"]
   }
   statement {
     actions = ["xray:Put*"]
