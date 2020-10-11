@@ -1,10 +1,10 @@
 const express = require('express'),
   AWSXRay = require('aws-xray-sdk'),
+  AWS = require('aws-sdk'),
   config = require('./config'),
   app = express();
 
 const cloudWatchLogs = new AWS.CloudWatchLogs({apiVersion: config.logs.apiVersion, region: config.logs.region});
-
 
 app.use(AWSXRay.express.openSegment('MyApp'));
 
