@@ -7,6 +7,10 @@ data "aws_iam_policy_document" "app-cloudwatch-policy-inline" {
     actions = ["logs:DescribeLogStreams"]
     resources = ["*"]
   }
+  statement {
+    actions = ["sqs:SendMessage", "sqs:ReceiveMessage", "sqs:DeleteMessage"]
+    resources = [aws_sqs_queue.source_queue.arn, aws_sqs_queue.dlq_queue.arn]
+  }
 }
 
 data "aws_iam_policy_document" "instance-assume-role-policy-inline" {

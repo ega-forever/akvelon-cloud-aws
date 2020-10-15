@@ -36,7 +36,7 @@ resource "aws_instance" "app" {
   apt-get install -y nodejs
   npm install -g pm2
   git clone https://github.com/ega-forever/akvelon-cloud-aws.git ~/app
-  cd ~/app/qaas/sqs/dlq/app && npm run build && \
+  cd ~/app/qaas/sqs/dlq/app && npm install && npm run build && \
   echo 'module.exports = {
     apps : [
         {
@@ -55,7 +55,7 @@ resource "aws_instance" "app" {
         }
     ]
   }' > ecosystem.config.js && \
-  npm install && sudo pm2 startup ubuntu && sudo pm2 start ecosystem.config.js && sudo pm2 save
+  sudo pm2 startup ubuntu && sudo pm2 start ecosystem.config.js && sudo pm2 save
 
   EOT
 
