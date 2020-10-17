@@ -4,7 +4,7 @@ resource "aws_security_group" "webserver_sg" {
     from_port = 80
     protocol = "tcp"
     to_port = 80
-    security_groups = [aws_lb.application_load_balancer]
+    security_groups = aws_lb.application_load_balancer.security_groups
   }
   ingress {
     from_port = 22
@@ -22,7 +22,7 @@ resource "aws_security_group" "webserver_sg" {
 }
 
 resource "aws_launch_configuration" "wordpress" {
-  image_id = data.aws_ami.webserver_ami.id
+  image_id = var.ec2_ami
   instance_type = var.ec2_instance_type
   key_name = var.ec2_keypair_name
   security_groups = [aws_security_group.webserver_sg.id]
@@ -67,19 +67,4 @@ resource "aws_launch_configuration" "wordpress" {
   EOT
 }
 
-data "aws_ami" "webserver_ami" {
-  most_recent = true
-
-  filter {
-    name   = "name"
-    values = [var.ec2_ami]
-  }
-
-  filter {
-    name   = "virtualization-type"
-    values = ["HVM64"]
-  }
-
-  owners = ["self"]
-}
 

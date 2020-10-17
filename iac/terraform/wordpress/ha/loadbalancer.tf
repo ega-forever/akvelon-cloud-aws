@@ -7,12 +7,18 @@ resource "aws_security_group" "alb_sg" {
     cidr_blocks = ["0.0.0.0/0"]
   }
   vpc_id = var.vpc_id
+  egress {
+    from_port = 0
+    protocol = "-1"
+    to_port = 0
+    cidr_blocks = ["0.0.0.0/0"]
+  }
 }
 
 resource "aws_lb" "application_load_balancer" {
   load_balancer_type = "application"
-  subnets = [var.subnets]
-  security_groups = [aws_security_group.alb_sg]
+  subnets = var.subnets
+  security_groups = [aws_security_group.alb_sg.id]
 }
 
 resource "aws_lb_listener" "alb_listener" {

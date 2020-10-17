@@ -1,3 +1,8 @@
+variable "region" {
+  type    = string
+  default = "us-west-2"
+}
+
 variable "ec2_keypair_name" {
   type    = string
   default = "wordpress_keypair"
@@ -5,7 +10,7 @@ variable "ec2_keypair_name" {
 
 variable "ec2_ami" {
   type    = string
-  default = "ami-0701e7be9b2a77600" # ubuntu image
+  default = "ami-003634241a8fcdec0" # ubuntu/images/hvm-ssd/ubuntu-bionic-18.04-amd64-server-20200408
 }
 
 variable "ec2_instance_type" {
@@ -45,10 +50,10 @@ variable "db_allocated_storage" {
 
 variable "vpc_id" {
   type    = string
-  default = ""
+  default = "vpc-16a3e26e"
 }
 
 variable "subnets" {
-  type    = string
-  default = "subnet-e99acc8e,subnet-24bbe36d"
+  type    = list
+  default = ["subnet-4ee63436","subnet-05ae514f"]
 }
