@@ -1,0 +1,17 @@
+version: "3"
+
+services:
+
+  db:
+    image: postgres:12.0
+    environment:
+      POSTGRES_PASSWORD: 123
+      POSTGRES_USER: counter
+      POSTGRES_DB: counter
+    ports:
+      - 5432:5432
+    networks:
+      - counter
+
+networks:
+  counter:
