@@ -13,6 +13,11 @@ variable "app_port" {
   default = 80
 }
 
+variable "service_discovery_name" {
+  type = string
+  default = "app"
+}
+
 locals {
   json_data = jsondecode(file("../../result.json"))
 }

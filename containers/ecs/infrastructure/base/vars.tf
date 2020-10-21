@@ -77,3 +77,8 @@ variable "vpc_private_subnet2_az" {
   type = string
   default = "eu-west-1a"
 }
+
+variable "service_discovery_namespace" {
+  type = string
+  default = "base.apps"
+}

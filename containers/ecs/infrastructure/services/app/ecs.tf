@@ -2,8 +2,8 @@ resource "aws_ecs_task_definition" "app" {
   family = var.app_name
   network_mode = "awsvpc"
   requires_compatibilities = ["FARGATE"]
-  task_role_arn = local.json_data.task_role.value
-  execution_role_arn = local.json_data.main_ecs_role.value
+  task_role_arn = local.json_data.task_role.value # the role used by task itself, like logging to cloudwatch
+  execution_role_arn = local.json_data.main_ecs_role.value # the role for executing certain actions over task, like pulling image
   cpu = "256"
   memory = "512"
   container_definitions = jsonencode([
@@ -57,5 +57,9 @@ resource "aws_ecs_service" "app" {
     target_group_arn = aws_lb_target_group.alb_tg.arn
     container_name   = "app"
     container_port   = var.app_port
+  }
+  service_registries {
+    registry_arn = aws_service_discovery_service.fargate.arn
+    port = var.app_port
   }
 }

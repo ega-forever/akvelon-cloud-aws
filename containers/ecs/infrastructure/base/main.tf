@@ -52,3 +52,7 @@ output "task_role" {
 output "main_ecs_role" {
   value = aws_iam_role.main-ecs-tasks.arn
 }
+
+output "service_discovery_namespace_id" {
+  value = aws_service_discovery_private_dns_namespace.service_discovery.id
+}
