@@ -5,7 +5,8 @@ variable "ec2_keypair_name" {
 
 variable "ec2_ami" {
   type    = string
-  default = "ami-003634241a8fcdec0" # ubuntu/images/hvm-ssd/ubuntu-bionic-18.04-amd64-server-20200408
+  default = "ami-003634241a8fcdec0" # us-west-2 ubuntu/images/hvm-ssd/ubuntu-bionic-18.04-amd64-server-20200408
+  #default = "ami-0f56279347d2fa43e" # us-west-1 ubuntu/images/hvm-ssd/ubuntu-bionic-18.04-amd64-server-20200408
 }
 
 variable "ec2_instance_type" {
